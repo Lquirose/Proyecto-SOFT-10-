@@ -8,39 +8,35 @@ public class Medicamento {
     private String categoria;
     private LocalDate fechaVencimiento;
     private int cantidad;
-    private String descripcion;
     private String instrucciones;
     private String efectosSecundarios;
-    private String restricciones;
     private int codigoProducto;
 
     private final ArrayList<String> listaImagenes;
 
-    public Medicamento(String nombre, String categoria, String descripcion,
+    public Medicamento(String nombre, String categoria,
                        LocalDate fechaVencimiento, int cantidad, double precio,
                        int codigoProducto, String instrucciones,
-                       String efectosSecundarios, String restricciones) {
+                       String efectosSecundarios) {
         this.nombre = nombre;
         this.categoria = categoria;
-        this.descripcion = descripcion;
         this.fechaVencimiento = fechaVencimiento;
         this.cantidad = cantidad;
         this.precio = precio;
         this.codigoProducto = codigoProducto;
         this.instrucciones = instrucciones;
         this.efectosSecundarios = efectosSecundarios;
-        this.restricciones = restricciones;
         this.listaImagenes = new ArrayList<>();
     }
 
-    public Medicamento(String nombre, String categoria, String descripcion,
+    public Medicamento(String nombre, String categoria,
                        LocalDate fechaVencimiento, int cantidad, double precio,
-                       String instrucciones, String efectosSecundarios, String restricciones) {
-        this(nombre, categoria, descripcion, fechaVencimiento, cantidad, precio,
-                0, instrucciones, efectosSecundarios, restricciones);
+                       String instrucciones, String efectosSecundarios) {
+        this(nombre, categoria, fechaVencimiento, cantidad, precio,
+                0, instrucciones, efectosSecundarios);
     }
 
-    // ===== Métodos para imágenes =====
+
     public void agregarImagen(String rutaImagen) {
         listaImagenes.add(rutaImagen);
     }
@@ -93,14 +89,6 @@ public class Medicamento {
         this.cantidad = cantidad;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public String getInstrucciones() {
         return instrucciones;
     }
@@ -117,14 +105,6 @@ public class Medicamento {
         this.efectosSecundarios = efectosSecundarios;
     }
 
-    public String getRestricciones() {
-        return restricciones;
-    }
-
-    public void setRestricciones(String restricciones) {
-        this.restricciones = restricciones;
-    }
-
     public int getCodigoProducto() {
         return codigoProducto;
     }
@@ -133,19 +113,16 @@ public class Medicamento {
         this.codigoProducto = codigoProducto;
     }
 
-    // ===== toString =====
     @Override
     public String toString() {
-        return "Código Producto: " + codigoProducto +
-                "\nNombre: " + nombre +
-                "\nDescripción: " + descripcion +
+        return "Nombre: " + nombre +
+                "\nCódigo Producto: " + codigoProducto +
                 "\nPrecio: " + precio +
                 "\nCategoría: " + categoria +
                 "\nCantidad: " + cantidad +
                 "\nFecha de Vencimiento: " + fechaVencimiento +
                 "\nInstrucciones: " + instrucciones +
                 "\nEfectos Secundarios: " + efectosSecundarios +
-                "\nRestricciones: " + restricciones +
                 "\nImágenes: " + listaImagenes;
     }
 }
