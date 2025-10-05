@@ -99,4 +99,34 @@ public class ListaEnlazadaSimple {
         }
         return total;
     }
+
+    //Para que se vea como factura (temporal)
+    public void mostrarReporteCostos() {
+        if (primero == null) {
+            System.out.println("La lista está vacía.");
+            return;
+        }
+
+        Nodo actual = primero;
+        double totalAcumulado = 0;
+
+        System.out.println("\n=======REPORTE DE COSTOS=======");
+        while (actual != null) {
+            Medicamento m = actual.getDato();
+            double subtotal = m.getPrecio() * m.getCantidad();
+            totalAcumulado += subtotal;
+
+            System.out.println("Medicamento: " + m.getNombre());
+            System.out.println("Categoría: " + m.getCategoria());
+            System.out.println("Cantidad: " + m.getCantidad());
+            System.out.println("Precio unitario: ₡" + m.getPrecio());
+            System.out.println("Subtotal: ₡" + subtotal);
+            System.out.println("----------------------------------");
+
+            actual = actual.getSiguiente(); // Pasa al siguiente para seguir leyendo la lista!
+        }
+
+        System.out.println("________TOTAL________ ₡" + totalAcumulado);
+        System.out.println("===================================");
+    }
 }
