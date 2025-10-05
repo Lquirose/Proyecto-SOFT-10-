@@ -123,7 +123,7 @@ public class ListaEnlazadaSimple {
             System.out.println("Subtotal: ₡" + subtotal);
             System.out.println("----------------------------------");
 
-            actual = actual.getSiguiente(); // Pasa al siguiente para seguir leyendo la lista!
+            actual = actual.getSiguiente();
         }
 
         System.out.println("________TOTAL________ ₡" + totalAcumulado);

@@ -37,14 +37,6 @@ public class Medicamento {
     }
 
 
-    public void agregarImagen(String rutaImagen) {
-        listaImagenes.add(rutaImagen);
-    }
-
-    public void eliminarImagen(String rutaImagen) {
-        listaImagenes.remove(rutaImagen);
-    }
-
     public ArrayList<String> getListaImagenes() {
         return listaImagenes;
     }
@@ -125,4 +117,24 @@ public class Medicamento {
                 "\nEfectos Secundarios: " + efectosSecundarios +
                 "\nImágenes: " + listaImagenes;
     }
+
+    public void agregarImagen(String rutaImagen) {
+        listaImagenes.add(rutaImagen);
+    }
+
+    public void eliminarImagen(String rutaImagen) {
+        listaImagenes.remove(rutaImagen);
+    }
+
+    public void mostrarImagenes() {
+        if (listaImagenes.isEmpty()) {
+            System.out.println("No hay imágenes registradas para este medicamento.");
+        } else {
+            System.out.println("Imágenes del medicamento:");
+            for (int i = 0; i < listaImagenes.size(); i++) {
+                System.out.println((i + 1) + ". " + listaImagenes.get(i));
+            }
+        }
+    }
+
 }
