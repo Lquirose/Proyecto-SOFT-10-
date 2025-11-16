@@ -1,50 +1,48 @@
 public class ListaEnlazadaSimple {
 
-    private Nodo primero;
+    private Medicamento primero;
 
     public ListaEnlazadaSimple() {
         primero = null;
     }
 
-    public Nodo getPrimero() {
+    public Medicamento getPrimero() {
         return primero;
     }
 
-    public void setPrimero(Nodo nuevoPrimero) {
+    public void setPrimero(Medicamento nuevoPrimero) {
         primero = nuevoPrimero;
     }
 
     public void insertarInicio(Medicamento m) {
-        Nodo nuevo = new Nodo(m);
-        nuevo.setSiguiente(primero);
-        primero = nuevo;
+        m.setSiguiente(primero);
+        primero = m;
     }
 
     public void insertarFinal(Medicamento m) {
-        Nodo nuevo = new Nodo(m);
         if (primero == null) {
-            setPrimero(nuevo);
+            primero = m;
             return;
         }
-        Nodo temp = primero;
+        Medicamento temp = primero;
         while (temp.getSiguiente() != null) {
             temp = temp.getSiguiente();
         }
-        temp.setSiguiente(nuevo);
+        temp.setSiguiente(m);
     }
 
     public Medicamento buscarMedicamento(String nombre) {
-        Nodo actual = primero;
-        while (actual != null && !actual.getDato().getNombre().equalsIgnoreCase(nombre)) {
+        Medicamento actual = primero;
+        while (actual != null && !actual.getNombre().equalsIgnoreCase(nombre)) {
             actual = actual.getSiguiente();
         }
         if (actual != null) {
             System.out.println("El medicamento fue encontrado.");
-            return actual.getDato();
         } else {
             System.out.println("El medicamento no fue encontrado.");
-            return null;
+
         }
+        return actual;
     }
 
 
@@ -53,9 +51,9 @@ public class ListaEnlazadaSimple {
             System.out.println("Lista vacía.");
             return;
         }
-        Nodo actual = primero;
+        Medicamento actual = primero;
         while (actual != null) {
-            System.out.println(actual.getDato()); // usa el toString() de Medicamento
+            System.out.println(actual); // usa el toString() de Medicamento, avance 2: se cambió para que funcione con las modificaciones de nodo!
             actual = actual.getSiguiente();
         }
     }
@@ -66,22 +64,23 @@ public class ListaEnlazadaSimple {
             System.out.println("Lista vacía.");
             return null;
         }
-        Nodo actual = primero;
-        Nodo anterior = null;
+        Medicamento actual = primero;
+        Medicamento anterior = null;
 
-        while (actual != null && !actual.getDato().getNombre().equalsIgnoreCase(nombre)) {
+        while (actual != null && !actual.getNombre().equalsIgnoreCase(nombre)) {
             anterior = actual;
             actual = actual.getSiguiente();
         }
 
         if (actual != null) {
             System.out.println("El medicamento a eliminar fue encontrado.");
+
             if (actual == primero) {
                 primero = primero.getSiguiente();
             } else {
                 anterior.setSiguiente(actual.getSiguiente());
             }
-            return actual.getDato();
+            return actual;
         } else {
             System.out.println("El medicamento no fue encontrado.");
             return null;
@@ -91,10 +90,9 @@ public class ListaEnlazadaSimple {
     //Este es un metodo que podemos usar para el carrito
     public double calcularCostoTotal() {
         double total = 0;
-        Nodo actual = primero;
+        Medicamento actual = primero;
         while (actual != null) {
-            Medicamento m = actual.getDato();
-            total += m.getPrecio() * m.getCantidad();
+            total += actual.getPrecio() * actual.getCantidad(); //cambio a actual por las modificaciones de antes
             actual = actual.getSiguiente();
         }
         return total;
@@ -107,19 +105,18 @@ public class ListaEnlazadaSimple {
             return;
         }
 
-        Nodo actual = primero;
+        Medicamento actual = primero;
         double totalAcumulado = 0;
 
         System.out.println("\n=======REPORTE DE COSTOS=======");
         while (actual != null) {
-            Medicamento m = actual.getDato();
-            double subtotal = m.getPrecio() * m.getCantidad();
+            double subtotal = actual.getPrecio() * actual.getCantidad();
             totalAcumulado += subtotal;
 
-            System.out.println("Medicamento: " + m.getNombre());
-            System.out.println("Categoría: " + m.getCategoria());
-            System.out.println("Cantidad: " + m.getCantidad());
-            System.out.println("Precio unitario: ₡" + m.getPrecio());
+            System.out.println("Medicamento: " + actual.getNombre());
+            System.out.println("Categoría: " + actual.getCategoria());
+            System.out.println("Cantidad: " + actual.getCantidad());
+            System.out.println("Precio unitario: ₡" + actual.getPrecio());
             System.out.println("Subtotal: ₡" + subtotal);
             System.out.println("----------------------------------");
 

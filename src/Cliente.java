@@ -5,7 +5,7 @@ public class Cliente {
     private String telefono;
     private String direccion;
     private ListaEnlazadaSimple carrito;
-
+    private int prioridad; //Avance 2 atributo necesario para la cola de prioridad
 
     public Cliente(String idCliente, String nombre, String correo, String telefono, String direccion) {
         this.idCliente = idCliente;
@@ -35,12 +35,21 @@ public class Cliente {
     public ListaEnlazadaSimple getCarrito() { return carrito; }
     public void setCarrito(ListaEnlazadaSimple carrito) { this.carrito = carrito; }
 
+    //Getter y setter del atributo nuevo "prioridad"
+    public int getPrioridad() {
+        return prioridad;
+    }
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+
     @Override
     public String toString() {
         return "Nombre:" + nombre+
                 "\nidCliente='" + idCliente +
                 "\ncorreo='" + correo +
                 "\ntelefono='" + telefono +
-                "\ndireccion='" + direccion;
+                "\ndireccion='" + direccion +
+                "\nprioridad=" + prioridad;
     }
 }

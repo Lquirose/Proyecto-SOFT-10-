@@ -14,6 +14,10 @@ public class Medicamento {
 
     private final ArrayList<String> listaImagenes;
 
+    //Modificacion tomando en cuenta la retroalimentación de primer avance
+    // se elimina la clase nodo y se deja en medicamentos (producto)
+    private Medicamento siguiente;
+
     public Medicamento(String nombre, String categoria,
                        LocalDate fechaVencimiento, int cantidad, double precio,
                        int codigoProducto, String instrucciones,
@@ -39,6 +43,17 @@ public class Medicamento {
 
     public ArrayList<String> getListaImagenes() {
         return listaImagenes;
+    }
+
+    //Getter y Setter del Nodo
+
+
+    public Medicamento getSiguiente() {
+        return siguiente;
+    }
+
+    public void setSiguiente(Medicamento siguiente) {
+        this.siguiente = siguiente;
     }
 
     public String getNombre() {
