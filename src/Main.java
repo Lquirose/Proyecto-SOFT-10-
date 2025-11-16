@@ -3,65 +3,82 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Main {
+
     private static final Scanner sc = new Scanner(System.in);
-    private static final ListaEnlazadaSimple listaMedicamentos = new ListaEnlazadaSimple();
+
+    // Árbol de medicamentos
+    private static final arbolProductos inventario = new arbolProductos();
+
+    // Cola de prioridad para clientes
+    private static final PriorityQueue<Cliente> colaClientes =
+            new PriorityQueue<>((c1, c2) -> Integer.compare(c2.getPrioridad(), c1.getPrioridad()));
 
     public static void main(String[] args) {
+
         int opcion;
         do {
-            mostrarMenu();
-            opcion = sc.nextInt();
-            sc.nextLine();
+            mostrarMenuPrincipal();
+            opcion = leerEntero();
 
             switch (opcion) {
-                case 1:
-                    insertarMedicamento(true); // Inserta al inicio
-                    break;
-                case 2:
-                    insertarMedicamento(false); //Inserta al final
-                    break;
-                case 3:
-                    editarMedicamento();
-                    break;
-                case 4:
-                    eliminarMedicamento();
-                    break;
-                case 5:
-                    mostrarMedicamentos();
-                    break;
-                case 6:
-                    mostrarReporteCostos();
-                    break;
-                case 7:
-                    System.out.println("Saliendo...");
-                    break;
-                default:
-                    System.out.println("Opción inválida.");
+                case 1 -> menuMedicamentos();
+                case 2 -> menuClientes();
+                case 3 -> atenderCola();
+                case 4 -> System.out.println("Saliendo del sistema...");
+                default -> System.out.println("Opción inválida.");
             }
-        } while (opcion != 7);
-
-        sc.close();
+        } while (opcion != 4);
     }
 
-    // --- MÉTODOS DEL MENÚ ---
-
-    private static void mostrarMenu() {
-        System.out.println("\n===== MENÚ FARMACIA =====");
-        System.out.println("1. Insertar medicamento al inicio");
-        System.out.println("2. Insertar medicamento al final");
-        System.out.println("3. Editar medicamento");
-        System.out.println("4. Eliminar medicamento");
-        System.out.println("5. Mostrar todos los medicamentos");
-        System.out.println("6. Mostrar reporte de costos");
-        System.out.println("7. Salir");
+    // ================================
+    //  MENÚ PRINCIPAL
+    // ================================
+    private static void mostrarMenuPrincipal() {
+        System.out.println("\n===== MENÚ PRINCIPAL =====");
+        System.out.println("1. Gestionar Medicamentos");
+        System.out.println("2. Gestionar Clientes");
+        System.out.println("3. Atender Cola");
+        System.out.println("4. Salir");
         System.out.print("Seleccione una opción: ");
     }
 
-    private static void insertarMedicamento(boolean alInicio) {
-        System.out.print("Código del producto: ");
-        int codigoProducto = sc.nextInt();
-        sc.nextLine();
+    // ================================
+    //  MENU MEDICAMENTOS
+    // ================================
+    private static void menuMedicamentos() {
+        int opcion;
+        do {
+            System.out.println("\n===== MENÚ MEDICAMENTOS =====");
+            System.out.println("1. Insertar medicamento");
+            System.out.println("2. Editar medicamento");
+            System.out.println("3. Eliminar medicamento");
+            System.out.println("4. Mostrar medicamentos (In-Order)");
+            System.out.println("5. Mostrar costo total del inventario");
+            System.out.println("6. Volver");
+            System.out.print("Seleccione una opción: ");
 
+            opcion = leerEntero();
+
+            switch (opcion) {
+                case 1 -> insertarMedicamento();
+                case 2 -> editarMedicamento();
+                case 3 -> eliminarMedicamento();
+                case 4 -> mostrarMedicamentos();
+                case 5 -> mostrarReporteCostos();
+                case 6 -> {}
+                default -> System.out.println("Opción inválida.");
+            }
+        } while (opcion != 6);
+    }
+
+    // ================================
+    // MÉTODOS DE MEDICAMENTOS
+    // ================================
+    private static void insertarMedicamento() {
+        System.out.print("Código del producto: ");
+        int codigoProducto = leerEntero();
+
+        sc.nextLine();
         System.out.print("Nombre: ");
         String nombre = sc.nextLine();
 
@@ -69,168 +86,277 @@ public class Main {
         String categoria = sc.nextLine();
 
         System.out.print("Cantidad: ");
-        int cantidad = sc.nextInt();
-        sc.nextLine();
+        int cantidad = leerEntero();
 
         System.out.print("Precio: ");
-        double precio = sc.nextDouble();
-        sc.nextLine();
+        double precio = leerDouble();
 
-        // Validación de fecha
         LocalDate fecha = null;
-        boolean fechaValida = false;
-        while (!fechaValida) {
+        while (true) {
             System.out.print("Fecha de vencimiento (AAAA-MM-DD): ");
-            String fechaStr = sc.nextLine();
             try {
-                fecha = LocalDate.parse(fechaStr);
-                fechaValida = true;
+                fecha = LocalDate.parse(sc.nextLine());
+                break;
             } catch (Exception e) {
-                System.out.println("Formato inválido. Use (AAAA-MM-DD).");
+                System.out.println("Formato inválido. Intente nuevamente.");
             }
         }
 
-        System.out.println("Instrucciones: ");
+        System.out.print("Instrucciones: ");
         String instrucciones = sc.nextLine();
 
-        System.out.println("Efectos Secundarios: ");
-        String efectosSecundarios = sc.nextLine();
+        System.out.print("Efectos secundarios: ");
+        String efectos = sc.nextLine();
 
-        Medicamento m = new Medicamento(
+        Medicamento m = new Medicamento(nombre, categoria, fecha, cantidad, precio,
+                codigoProducto, instrucciones, efectos);
 
-                nombre, categoria,
-                fecha, cantidad, precio,
-                codigoProducto, instrucciones, efectosSecundarios
-        );
-
-        System.out.print("¿Desea agregar imágenes a este medicamento? (s/n): ");
-        String resp = sc.nextLine();
-        if (resp.equalsIgnoreCase("s")) {
+        System.out.print("¿Desea agregar imágenes? (s/n): ");
+        if (sc.nextLine().equalsIgnoreCase("s"))
             gestionarImagenes(m);
-        }
 
-        if (alInicio) {
-            listaMedicamentos.insertarInicio(m);
-        } else {
-            listaMedicamentos.insertarFinal(m);
-        }
-        System.out.println("Medicamento agregado.");
+        inventario.insertar(m);
+        System.out.println("Medicamento agregado correctamente.");
     }
 
     private static void editarMedicamento() {
-        System.out.print("Ingrese el nombre del medicamento a editar: ");
-        String nombreEditar = sc.nextLine();
-        Medicamento medEditar = listaMedicamentos.buscarMedicamento(nombreEditar);
+        System.out.print("Nombre del medicamento a editar: ");
+        String nombre = sc.nextLine();
 
-        if (medEditar != null) {
-            System.out.println("--- Editando Medicamento ---");
+        Medicamento med = inventario.buscar(nombre);
 
-            System.out.print("Nuevo nombre (" + medEditar.getNombre() + "): ");
-            String nuevoNombre = sc.nextLine();
-            if (!nuevoNombre.isEmpty()) medEditar.setNombre(nuevoNombre);
-
-            System.out.print("Nueva categoría (" + medEditar.getCategoria() + "): ");
-            String nuevaCategoria = sc.nextLine();
-            if (!nuevaCategoria.isEmpty()) medEditar.setCategoria(nuevaCategoria);
-
-            System.out.print("Nueva fecha de vencimiento (yyyy-MM-dd) (" + medEditar.getFechaVencimiento() + "): ");
-            String fechaStr = sc.nextLine();
-            if (!fechaStr.isEmpty()) {
-                try {
-                    LocalDate nuevaFecha = LocalDate.parse(fechaStr);
-                    medEditar.setFechaVencimiento(nuevaFecha);
-                } catch (Exception e) {
-                    System.out.println("Fecha inválida, no se modificó.");
-                }
-            }
-
-            System.out.print("Nueva cantidad (" + medEditar.getCantidad() + "): ");
-            String cantStr = sc.nextLine();
-            if (!cantStr.isEmpty()) {
-                try {
-                    medEditar.setCantidad(Integer.parseInt(cantStr));
-                } catch (NumberFormatException e) {
-                    System.out.println("Cantidad inválida, no se modificó.");
-                }
-            }
-
-            System.out.print("Nuevo precio (" + medEditar.getPrecio() + "): ");
-            String precioStr = sc.nextLine();
-            if (!precioStr.isEmpty()) {
-                try {
-                    medEditar.setPrecio(Double.parseDouble(precioStr));
-                } catch (NumberFormatException e) {
-                    System.out.println("Precio inválido, no se modificó.");
-                }
-            }
-
-            System.out.print("Nuevas instrucciones (" + medEditar.getInstrucciones() + "): ");
-            String instr = sc.nextLine();
-            if (!instr.isEmpty()) medEditar.setInstrucciones(instr);
-
-            System.out.print("Nuevos efectos secundarios (" + medEditar.getEfectosSecundarios() + "): ");
-            String efectos = sc.nextLine();
-            if (!efectos.isEmpty()) medEditar.setEfectosSecundarios(efectos);
-
-            System.out.print("¿Desea gestionar imágenes para este medicamento? (s/n): ");
-            String resp = sc.nextLine();
-            if (resp.equalsIgnoreCase("s")) {
-                gestionarImagenes(medEditar);
-            }
-
-
-            System.out.println("Medicamento actualizado correctamente.");
-        } else {
-            System.out.println("El medicamento no fue encontrado.");
+        if (med == null) {
+            System.out.println("No existe un medicamento con este nombre.");
+            return;
         }
+
+        System.out.println("--- Editar medicamento ---");
+        System.out.print("Nuevo nombre (" + med.getNombre() + "): ");
+        String nuevo = sc.nextLine();
+        if (!nuevo.isEmpty()) med.setNombre(nuevo);
+
+        System.out.print("Nueva categoría (" + med.getCategoria() + "): ");
+        String cat = sc.nextLine();
+        if (!cat.isEmpty()) med.setCategoria(cat);
+
+        System.out.print("Nueva cantidad (" + med.getCantidad() + "): ");
+        String cant = sc.nextLine();
+        if (!cant.isEmpty()) med.setCantidad(Integer.parseInt(cant));
+
+        System.out.print("Nuevo precio (" + med.getPrecio() + "): ");
+        String pre = sc.nextLine();
+        if (!pre.isEmpty()) med.setPrecio(Double.parseDouble(pre));
+
+        System.out.print("¿Editar imágenes? (s/n): ");
+        if (sc.nextLine().equalsIgnoreCase("s"))
+            gestionarImagenes(med);
+
+        System.out.println("Medicamento actualizado.");
     }
 
-
     private static void eliminarMedicamento() {
-        System.out.print("Ingrese el nombre del medicamento a eliminar: ");
-        String nombreEliminar = sc.nextLine();
-        listaMedicamentos.eliminarMedicamento(nombreEliminar);
+        System.out.print("Nombre del medicamento a eliminar: ");
+        inventario.eliminarPorNombre(sc.nextLine());
+        System.out.println("Medicamento eliminado.");
     }
 
     private static void mostrarMedicamentos() {
-        listaMedicamentos.mostrarLista();
+        System.out.println("\n===== INVENTARIO (In-Order) =====");
+        inventario.inOrder();
     }
 
     private static void mostrarReporteCostos() {
-        double total = listaMedicamentos.calcularCostoTotal();
-        System.out.println("Costo total del inventario: " + total);
+        System.out.println("Costo total: " + inventario.calcularCostoTotal());
     }
 
-
     private static void gestionarImagenes(Medicamento med) {
-        int opcion;
+        int op;
         do {
-            System.out.println("\n--- Gestión de imágenes para: " + med.getNombre() + " ---");
+            System.out.println("\n--- Imágenes de " + med.getNombre() + " ---");
             System.out.println("1. Agregar imagen");
             System.out.println("2. Eliminar imagen");
             System.out.println("3. Mostrar imágenes");
             System.out.println("0. Volver");
-            System.out.print("Seleccione una opción: ");
-            opcion = Integer.parseInt(sc.nextLine());
+            op = leerEntero();
+            sc.nextLine();
 
-            switch (opcion) {
+            switch (op) {
                 case 1 -> {
-                    System.out.print("Ingrese la ruta o URL de la imagen: ");
-                    String ruta = sc.nextLine();
-                    med.agregarImagen(ruta);
-                    System.out.println("Imagen agregada.");
+                    System.out.print("Ruta: ");
+                    med.agregarImagen(sc.nextLine());
                 }
                 case 2 -> {
                     med.mostrarImagenes();
-                    System.out.print("Ingrese la ruta de la imagen a eliminar: ");
-                    String rutaEliminar = sc.nextLine();
-                    med.eliminarImagen(rutaEliminar);
-                    System.out.println("Imagen eliminada.");
+                    System.out.print("Ruta a eliminar: ");
+                    med.eliminarImagen(sc.nextLine());
                 }
                 case 3 -> med.mostrarImagenes();
-                case 0 -> System.out.println("Volviendo...");
-                default -> System.out.println("Opción no válida.");
+                case 0 -> {}
+                default -> System.out.println("Opción inválida.");
             }
-        } while (opcion != 0);
+        } while (op != 0);
+    }
+
+
+
+    // ================================
+    // MENU CLIENTES
+    // ================================
+    private static void menuClientes() {
+        int opcion;
+
+        do {
+            System.out.println("\n===== MENÚ CLIENTES =====");
+            System.out.println("1. Ingresar cliente");
+            System.out.println("2. Editar cliente");
+            System.out.println("3. Eliminar cliente");
+            System.out.println("4. Mostrar clientes en cola");
+            System.out.println("5. Volver");
+            System.out.print("Seleccione una opción: ");
+
+            opcion = leerEntero();
+
+            switch (opcion) {
+                case 1 -> ingresarCliente();
+                case 2 -> editarCliente();
+                case 3 -> eliminarCliente();
+                case 4 -> mostrarCola();
+                case 5 -> {}
+                default -> System.out.println("Opción inválida.");
+            }
+        } while (opcion != 5);
+    }
+
+    // ================================
+    // MÉTODOS CLIENTES
+    // ================================
+    private static void ingresarCliente() {
+        sc.nextLine();
+        System.out.print("ID Cliente: ");
+        String id = sc.nextLine();
+
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();
+
+        System.out.print("Correo: ");
+        String correo = sc.nextLine();
+
+        System.out.print("Teléfono: ");
+        String tel = sc.nextLine();
+
+        System.out.print("Dirección: ");
+        String dir = sc.nextLine();
+
+        Cliente c = new Cliente(id, nombre, correo, tel, dir);
+
+        System.out.print("Prioridad (1–3): ");
+        c.setPrioridad(leerEntero());
+
+        // Lista de productos antes de llenar carrito
+        System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
+        inventario.inOrder();
+
+        System.out.println("\nIngrese productos al carrito (escriba 'fin' para terminar):");
+        while (true) {
+            System.out.print("Nombre del medicamento: ");
+            String prod = sc.nextLine();
+            if (prod.equalsIgnoreCase("fin")) break;
+
+            Medicamento m = inventario.buscar(prod);
+            if (m != null) {
+                c.getCarrito().insertarFinal(m);
+                System.out.println("Producto agregado.");
+            } else {
+                System.out.println("El producto no existe.");
+            }
+        }
+
+        colaClientes.add(c);
+        System.out.println("Cliente agregado y encolado.");
+    }
+
+    private static void editarCliente() {
+        sc.nextLine();
+        System.out.print("Ingrese ID del cliente para editar: ");
+        String id = sc.nextLine();
+
+        Cliente cliente = colaClientes.stream()
+                .filter(c -> c.getIdCliente().equals(id))
+                .findFirst()
+                .orElse(null);
+
+        if (cliente == null) {
+            System.out.println("Cliente no encontrado.");
+            return;
+        }
+
+        System.out.print("Nuevo nombre (" + cliente.getNombre() + "): ");
+        String nuevo = sc.nextLine();
+        if (!nuevo.isEmpty()) cliente.setNombre(nuevo);
+
+        System.out.print("Nuevo correo (" + cliente.getCorreo() + "): ");
+        String correo = sc.nextLine();
+        if (!correo.isEmpty()) cliente.setCorreo(correo);
+
+        System.out.print("Nuevo teléfono (" + cliente.getTelefono() + "): ");
+        String tel = sc.nextLine();
+        if (!tel.isEmpty()) cliente.setTelefono(tel);
+
+        System.out.print("Nueva dirección (" + cliente.getDireccion() + "): ");
+        String dir = sc.nextLine();
+        if (!dir.isEmpty()) cliente.setDireccion(dir);
+
+        System.out.print("Nueva prioridad (" + cliente.getPrioridad() + "): ");
+        String prio = sc.nextLine();
+        if (!prio.isEmpty()) cliente.setPrioridad(Integer.parseInt(prio));
+
+        System.out.println("Cliente actualizado.");
+    }
+
+    private static void eliminarCliente() {
+        sc.nextLine();
+        System.out.print("ID Cliente a eliminar: ");
+        String id = sc.nextLine();
+
+        colaClientes.removeIf(c -> c.getIdCliente().equals(id));
+        System.out.println("Cliente eliminado de la cola.");
+    }
+
+    private static void mostrarCola() {
+        System.out.println("\n=== CLIENTES EN COLA ===");
+        colaClientes.forEach(System.out::println);
+    }
+
+    private static void atenderCola() {
+        if (colaClientes.isEmpty()) {
+            System.out.println("No hay clientes en espera.");
+            return;
+        }
+
+        Cliente c = colaClientes.poll();
+        System.out.println("\n=== ATENDIENDO CLIENTE ===");
+        System.out.println(c);
+        System.out.println("Carrito:");
+        c.getCarrito().mostrarReporteCostos();
+    }
+
+
+    // ================================
+    // MÉTODOS EXTRA
+    // ================================
+    private static int leerEntero() {
+        while (!sc.hasNextInt()) {
+            System.out.print("Ingrese un número válido: ");
+            sc.next();
+        }
+        return sc.nextInt();
+    }
+
+    private static double leerDouble() {
+        while (!sc.hasNextDouble()) {
+            System.out.print("Ingrese un número válido: ");
+            sc.next();
+        }
+        return sc.nextDouble();
     }
 }

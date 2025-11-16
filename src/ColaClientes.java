@@ -55,7 +55,7 @@ public class ColaClientes {
     }
 
     //Imprimir
-    public void ImprimirColaPriordadClientes() {
+    /*public void ImprimirColaPriordadClientes() {
         if (colaPrioridadCliente.isEmpty()) {
             System.out.println("La cola de clientes está vacía.");
             return;
@@ -66,5 +66,5 @@ public class ColaClientes {
             System.out.println("Nombre: " + c.getNombre() +
                     "\nPrioridad: " + c.getPrioridad());
         }
-    }
+    }*/
 }
