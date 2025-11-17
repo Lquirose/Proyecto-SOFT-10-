@@ -8,7 +8,7 @@ public class Main {
     // Árbol de medicamentos
     private static final arbolProductos inventario = new arbolProductos();
 
-    // Cola de prioridad para clientes
+    // Cola de prioridad (tu estructura personalizada)
     private static final ColaClientes colaClientes = new ColaClientes();
 
     public static void main(String[] args) {
@@ -41,7 +41,7 @@ public class Main {
     }
 
     // ================================
-    //  MENU MEDICAMENTOS
+    //  MENÚ MEDICAMENTOS
     // ================================
     private static void menuMedicamentos() {
         int opcion;
@@ -89,7 +89,7 @@ public class Main {
         System.out.print("Precio: ");
         double precio = leerDouble();
 
-        sc.nextLine(); //Limpia el buffer para que no de el error en la fecha!
+        sc.nextLine(); // evitar error de fecha
 
         LocalDate fecha = null;
         while (true) {
@@ -108,8 +108,10 @@ public class Main {
         System.out.print("Efectos secundarios: ");
         String efectos = sc.nextLine();
 
-        Medicamento m = new Medicamento(nombre, categoria, fecha, cantidad, precio,
-                codigoProducto, instrucciones, efectos);
+        Medicamento m = new Medicamento(
+                nombre, categoria, fecha, cantidad, precio,
+                codigoProducto, instrucciones, efectos
+        );
 
         System.out.print("¿Desea agregar imágenes? (s/n): ");
         if (sc.nextLine().equalsIgnoreCase("s"))
@@ -131,6 +133,7 @@ public class Main {
         }
 
         System.out.println("--- Editar medicamento ---");
+
         System.out.print("Nuevo nombre (" + med.getNombre() + "): ");
         String nuevo = sc.nextLine();
         if (!nuevo.isEmpty()) med.setNombre(nuevo);
@@ -197,8 +200,6 @@ public class Main {
         } while (op != 0);
     }
 
-
-
     // ================================
     // MENU CLIENTES
     // ================================
@@ -251,32 +252,9 @@ public class Main {
 
         System.out.print("Prioridad (1–3): ");
         c.setPrioridad(leerEntero());
-        sc.nextLine(); // limpiar buffer
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-        System.out.println("A continuación se mostrará la lista de medicamentos. Presione 's' para continuar:");
-        String carritoLlenar = sc.nextLine();
-
-        if (!carritoLlenar.equalsIgnoreCase("s")) {
-            System.out.println("Operación cancelada. Debe presionar 's' para continuar.");
-            return;
-        }
+        sc.nextLine();
 
         // Mostrar inventario
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
         inventario.inOrder();
 
@@ -285,6 +263,7 @@ public class Main {
         while (true) {
             System.out.print("Nombre del medicamento: ");
             String prod = sc.nextLine();
+
             if (prod.equalsIgnoreCase("fin")) break;
 
             Medicamento invMed = inventario.buscar(prod);
@@ -292,57 +271,15 @@ public class Main {
             if (invMed != null) {
                 System.out.print("¿Cuántas unidades desea? ");
                 int cantidad = leerEntero();
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-                if (cantidad > invMed.getCantidad()) {
-                    System.out.println("❌ No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-                sc.nextLine(); // limpiar buffer
+                sc.nextLine();
 
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
                     continue;
                 }
 
-                // Restar existencias reales
                 invMed.setCantidad(invMed.getCantidad() - cantidad);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                // Crear un medicamento para el carrito
-                Medicamento medCarrito = new Medicamento(
-                        invMed.getNombre(),
-                        invMed.getPrecio(),
-                        cantidad,                 // cantidad comprada del usuario
-                        invMed.getCategoria()
-                );
-
-                medCarrito.setSiguiente(null); // evitar romper la lista del árbol
-
-                // Insertar en el carrito
-                c.getCarrito().insertarFinal(medCarrito);
-
-                System.out.println("✔ Producto agregado.");
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-                // Crear medicamento del carrito (copia ligera)
                 Medicamento medCarrito = new Medicamento(
                         invMed.getNombre(),
                         invMed.getPrecio(),
@@ -350,37 +287,21 @@ public class Main {
                         invMed.getCategoria()
                 );
 
-                c.getCarrito().insertarFinal(medCarrito);
-                System.out.println("✔ Producto agregado.");
+                medCarrito.setSiguiente(null);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+                c.getCarrito().insertarFinal(medCarrito);
+
+                System.out.println("✔ Producto agregado.");
             } else {
-                System.out.println("❌ El producto no existe.");
+                System.out.println("El producto no existe.");
             }
         }
 
-        // Encolar cliente correctamente
+        // Encolar cliente
         colaClientes.enqueue(c);
         System.out.println("Cliente agregado y encolado.");
     }
 
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     private static void editarCliente() {
         sc.nextLine();
         System.out.print("Ingrese ID del cliente para editar: ");
@@ -425,8 +346,7 @@ public class Main {
 
         if (eliminado) {
             System.out.println("Cliente eliminado.");
-        }
-        else {
+        } else {
             System.out.println("El cliente no existe.");
         }
     }
@@ -443,17 +363,14 @@ public class Main {
         }
 
         Cliente c = colaClientes.dequeue();
-        System.out.println("\n=== ATENDIENDO CLIENTE ===");
 
-        // Solo nombre e ID
+        System.out.println("\n=== ATENDIENDO CLIENTE ===");
         System.out.println("Cliente: " + c.getNombre());
         System.out.println("ID: " + c.getIdCliente());
 
         System.out.println("\nCarrito:");
         c.getCarrito().mostrarReporteCostos();
     }
-
-
 
     // ================================
     // MÉTODOS EXTRA
