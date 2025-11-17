@@ -101,29 +101,29 @@ public class ListaEnlazadaSimple {
     //Para que se vea como factura (temporal)
     public void mostrarReporteCostos() {
         if (primero == null) {
-            System.out.println("La lista está vacía.");
+            System.out.println("El carrito está vacío.");
             return;
         }
 
         Medicamento actual = primero;
         double totalAcumulado = 0;
 
-        System.out.println("\n=======REPORTE DE COSTOS=======");
+        System.out.println("\n======= REPORTE DE COSTOS =======");
         while (actual != null) {
             double subtotal = actual.getPrecio() * actual.getCantidad();
             totalAcumulado += subtotal;
 
-            System.out.println("Medicamento: " + actual.getNombre());
-            System.out.println("Categoría: " + actual.getCategoria());
-            System.out.println("Cantidad: " + actual.getCantidad());
+            System.out.println("Producto: " + actual.getNombre());
+            System.out.println("Cantidad seleccionada: " + actual.getCantidad());
             System.out.println("Precio unitario: ₡" + actual.getPrecio());
             System.out.println("Subtotal: ₡" + subtotal);
-            System.out.println("----------------------------------");
+            System.out.println("----------------------------------------");
 
             actual = actual.getSiguiente();
         }
 
-        System.out.println("________TOTAL________ ₡" + totalAcumulado);
-        System.out.println("===================================");
+        System.out.println("TOTAL A PAGAR: ₡" + totalAcumulado);
+        System.out.println("==========================================");
     }
+
 }

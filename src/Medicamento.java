@@ -152,4 +152,25 @@ public class Medicamento {
         }
     }
 
+
+    public Medicamento(String nombre, double precio, int cantidadComprada, String categoria) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.cantidad = cantidadComprada;   // cantidad que el cliente compró
+        this.categoria = categoria;
+
+        // Campos no necesarios en el carrito
+        this.fechaVencimiento = null;
+        this.instrucciones = "";
+        this.efectosSecundarios = "";
+        this.codigoProducto = 0;
+
+        // IMPORTANTE: el carrito debe tener su propia lista de imágenes (vacía)
+        this.listaImagenes = new ArrayList<>();
+
+        // Evita dañar la estructura del árbol
+        this.siguiente = null;
+    }
+
+
 }

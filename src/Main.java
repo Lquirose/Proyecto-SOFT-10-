@@ -252,28 +252,54 @@ public class Main {
         System.out.print("Prioridad (1–3): ");
         c.setPrioridad(leerEntero());
 
-        // Lista de productos antes de llenar carrito
         System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
         inventario.inOrder();
 
         System.out.println("\nIngrese productos al carrito (escriba 'fin' para terminar):");
+
         while (true) {
             System.out.print("Nombre del medicamento: ");
             String prod = sc.nextLine();
             if (prod.equalsIgnoreCase("fin")) break;
 
-            Medicamento m = inventario.buscar(prod);
-            if (m != null) {
-                c.getCarrito().insertarFinal(m);
-                System.out.println("Producto agregado.");
+            Medicamento invMed = inventario.buscar(prod);
+
+            if (invMed != null) {
+                System.out.print("¿Cuántas unidades desea? ");
+                int cantidad = leerEntero();
+
+                if (cantidad > invMed.getCantidad()) {
+                    System.out.println("❌ No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
+                    continue;
+                }
+
+                // Restar existencias reales
+                invMed.setCantidad(invMed.getCantidad() - cantidad);
+
+                // Crear un medicamento para el carrito
+                Medicamento medCarrito = new Medicamento(
+                        invMed.getNombre(),
+                        invMed.getPrecio(),
+                        cantidad,                 // cantidad comprada del usuario
+                        invMed.getCategoria()
+                );
+
+                medCarrito.setSiguiente(null); // evitar romper la lista del árbol
+
+                // Insertar en el carrito
+                c.getCarrito().insertarFinal(medCarrito);
+
+                System.out.println("✔ Producto agregado.");
             } else {
-                System.out.println("El producto no existe.");
+                System.out.println("❌ El producto no existe.");
             }
         }
 
         colaClientes.add(c);
         System.out.println("Cliente agregado y encolado.");
     }
+
+
 
     private static void editarCliente() {
         sc.nextLine();
@@ -335,10 +361,15 @@ public class Main {
 
         Cliente c = colaClientes.poll();
         System.out.println("\n=== ATENDIENDO CLIENTE ===");
-        System.out.println(c);
-        System.out.println("Carrito:");
+
+        // Solo nombre e ID
+        System.out.println("Cliente: " + c.getNombre());
+        System.out.println("ID: " + c.getIdCliente());
+
+        System.out.println("\nCarrito:");
         c.getCarrito().mostrarReporteCostos();
     }
+
 
 
     // ================================
