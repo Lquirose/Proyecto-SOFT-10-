@@ -254,7 +254,10 @@ public class Main {
         sc.nextLine(); // limpiar buffer
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         System.out.println("A continuación se mostrará la lista de medicamentos. Presione 's' para continuar:");
         String carritoLlenar = sc.nextLine();
 
@@ -264,6 +267,9 @@ public class Main {
         }
 
         // Mostrar inventario
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
         inventario.inOrder();
@@ -281,14 +287,20 @@ public class Main {
                 System.out.print("¿Cuántas unidades desea? ");
                 int cantidad = leerEntero();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("❌ No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
 =======
+=======
+>>>>>>> Stashed changes
                 sc.nextLine(); // limpiar buffer
 
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                     continue;
                 }
@@ -296,6 +308,7 @@ public class Main {
                 // Restar existencias reales
                 invMed.setCantidad(invMed.getCantidad() - cantidad);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                 // Crear un medicamento para el carrito
                 Medicamento medCarrito = new Medicamento(
@@ -312,6 +325,8 @@ public class Main {
 
                 System.out.println("✔ Producto agregado.");
 =======
+=======
+>>>>>>> Stashed changes
                 // Crear medicamento del carrito (copia ligera)
                 Medicamento medCarrito = new Medicamento(
                         invMed.getNombre(),
@@ -323,6 +338,9 @@ public class Main {
                 c.getCarrito().insertarFinal(medCarrito);
                 System.out.println("✔ Producto agregado.");
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             } else {
                 System.out.println("❌ El producto no existe.");
@@ -336,7 +354,10 @@ public class Main {
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     private static void editarCliente() {
