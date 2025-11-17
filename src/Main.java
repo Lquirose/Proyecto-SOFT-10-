@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Main {
@@ -10,8 +9,7 @@ public class Main {
     private static final arbolProductos inventario = new arbolProductos();
 
     // Cola de prioridad para clientes
-    private static final PriorityQueue<Cliente> colaClientes =
-            new PriorityQueue<>((c1, c2) -> Integer.compare(c2.getPrioridad(), c1.getPrioridad()));
+    private static final ColaClientes colaClientes = new ColaClientes();
 
     public static void main(String[] args) {
 
@@ -90,6 +88,8 @@ public class Main {
 
         System.out.print("Precio: ");
         double precio = leerDouble();
+
+        sc.nextLine(); //Limpia el buffer para que no de el error en la fecha!
 
         LocalDate fecha = null;
         while (true) {
@@ -251,7 +251,20 @@ public class Main {
 
         System.out.print("Prioridad (1–3): ");
         c.setPrioridad(leerEntero());
+        sc.nextLine(); // limpiar buffer
 
+<<<<<<< Updated upstream
+=======
+        System.out.println("A continuación se mostrará la lista de medicamentos. Presione 's' para continuar:");
+        String carritoLlenar = sc.nextLine();
+
+        if (!carritoLlenar.equalsIgnoreCase("s")) {
+            System.out.println("Operación cancelada. Debe presionar 's' para continuar.");
+            return;
+        }
+
+        // Mostrar inventario
+>>>>>>> Stashed changes
         System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
         inventario.inOrder();
 
@@ -267,15 +280,23 @@ public class Main {
             if (invMed != null) {
                 System.out.print("¿Cuántas unidades desea? ");
                 int cantidad = leerEntero();
+<<<<<<< Updated upstream
 
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("❌ No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
+=======
+                sc.nextLine(); // limpiar buffer
+
+                if (cantidad > invMed.getCantidad()) {
+                    System.out.println("No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
+>>>>>>> Stashed changes
                     continue;
                 }
 
                 // Restar existencias reales
                 invMed.setCantidad(invMed.getCantidad() - cantidad);
 
+<<<<<<< Updated upstream
                 // Crear un medicamento para el carrito
                 Medicamento medCarrito = new Medicamento(
                         invMed.getNombre(),
@@ -290,26 +311,40 @@ public class Main {
                 c.getCarrito().insertarFinal(medCarrito);
 
                 System.out.println("✔ Producto agregado.");
+=======
+                // Crear medicamento del carrito (copia ligera)
+                Medicamento medCarrito = new Medicamento(
+                        invMed.getNombre(),
+                        invMed.getPrecio(),
+                        cantidad,
+                        invMed.getCategoria()
+                );
+
+                c.getCarrito().insertarFinal(medCarrito);
+                System.out.println("✔ Producto agregado.");
+
+>>>>>>> Stashed changes
             } else {
                 System.out.println("❌ El producto no existe.");
             }
         }
 
-        colaClientes.add(c);
+        // Encolar cliente correctamente
+        colaClientes.enqueue(c);
         System.out.println("Cliente agregado y encolado.");
     }
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     private static void editarCliente() {
         sc.nextLine();
         System.out.print("Ingrese ID del cliente para editar: ");
         String id = sc.nextLine();
 
-        Cliente cliente = colaClientes.stream()
-                .filter(c -> c.getIdCliente().equals(id))
-                .findFirst()
-                .orElse(null);
+        Cliente cliente = colaClientes.buscarPorID(id);
 
         if (cliente == null) {
             System.out.println("Cliente no encontrado.");
@@ -344,22 +379,28 @@ public class Main {
         System.out.print("ID Cliente a eliminar: ");
         String id = sc.nextLine();
 
-        colaClientes.removeIf(c -> c.getIdCliente().equals(id));
-        System.out.println("Cliente eliminado de la cola.");
+        boolean eliminado = colaClientes.eliminar(id);
+
+        if (eliminado) {
+            System.out.println("Cliente eliminado.");
+        }
+        else {
+            System.out.println("El cliente no existe.");
+        }
     }
 
     private static void mostrarCola() {
         System.out.println("\n=== CLIENTES EN COLA ===");
-        colaClientes.forEach(System.out::println);
+        colaClientes.mostrarCola();
     }
 
     private static void atenderCola() {
-        if (colaClientes.isEmpty()) {
+        if (colaClientes.colaVacia()) {
             System.out.println("No hay clientes en espera.");
             return;
         }
 
-        Cliente c = colaClientes.poll();
+        Cliente c = colaClientes.dequeue();
         System.out.println("\n=== ATENDIENDO CLIENTE ===");
 
         // Solo nombre e ID

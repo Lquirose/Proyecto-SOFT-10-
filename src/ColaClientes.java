@@ -27,8 +27,7 @@ public class ColaClientes {
             i++;
         }
 
-
-        colaPrioridadCliente.add(nuevo); //inserta el número en la posición correcta si entra de último
+        colaPrioridadCliente.add(i, nuevo); //inserta el número en la posición correcta si entra de último
         //en las colas de prioridad normales "PriorityQueue<Cliente> prioridad = new PriorityQueue<>();" se ordena como en los
         //montículos pero en este caso necesitamos que se tome en cuenta el número del índice de ese cliente en la cola.
     }
@@ -54,8 +53,30 @@ public class ColaClientes {
         return colaPrioridadCliente.isEmpty();
     }
 
+    //Buscar clientes para tomar la prioridad que se le asignó
+    public Cliente buscarPorID(String id) {
+        for (Cliente c : colaPrioridadCliente) {
+            if (c.getIdCliente().equals(id)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    //elimina el id cuando el cliente se ha atendido para sacarlo de la cola
+    public boolean eliminar(String id) {
+        for (int i = 0; i < colaPrioridadCliente.size(); i++) {
+            if (colaPrioridadCliente.get(i).getIdCliente().equals(id)) {
+                colaPrioridadCliente.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     //Imprimir
-    /*public void ImprimirColaPriordadClientes() {
+    public void mostrarCola() {
         if (colaPrioridadCliente.isEmpty()) {
             System.out.println("La cola de clientes está vacía.");
             return;
@@ -66,5 +87,5 @@ public class ColaClientes {
             System.out.println("Nombre: " + c.getNombre() +
                     "\nPrioridad: " + c.getPrioridad());
         }
-    }*/
+    }
 }
