@@ -255,7 +255,10 @@ public class Main {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         System.out.println("A continuación se mostrará la lista de medicamentos. Presione 's' para continuar:");
@@ -268,6 +271,9 @@ public class Main {
 
         // Mostrar inventario
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -288,10 +294,13 @@ public class Main {
                 int cantidad = leerEntero();
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("❌ No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
                 sc.nextLine(); // limpiar buffer
@@ -299,6 +308,9 @@ public class Main {
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -308,6 +320,7 @@ public class Main {
                 // Restar existencias reales
                 invMed.setCantidad(invMed.getCantidad() - cantidad);
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
                 // Crear un medicamento para el carrito
@@ -327,6 +340,8 @@ public class Main {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
                 // Crear medicamento del carrito (copia ligera)
                 Medicamento medCarrito = new Medicamento(
                         invMed.getNombre(),
@@ -339,6 +354,9 @@ public class Main {
                 System.out.println("✔ Producto agregado.");
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -355,7 +373,10 @@ public class Main {
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
