@@ -9,9 +9,16 @@ public class Main {
     private static final arbolProductos inventario = new arbolProductos();
 
     // Cola de prioridad (tu estructura personalizada)
-    private static final ColaClientes colaClientes = new ColaClientes();
+    private static final Grafo grafo = new Grafo();
+    private static final ColaClientes colaClientes = new ColaClientes(grafo);
+
+    private static final String UBICACION_TIENDA = "San Jose";
+
+
 
     public static void main(String[] args) {
+
+        grafo.agregarVertice(UBICACION_TIENDA);
 
         int opcion;
         do {
@@ -21,11 +28,13 @@ public class Main {
             switch (opcion) {
                 case 1 -> menuMedicamentos();
                 case 2 -> menuClientes();
-                case 3 -> atenderCola();
-                case 4 -> System.out.println("Saliendo del sistema...");
+                case 3 -> menuGrafo();
+                case 4 -> atenderCola();
+                case 5 -> System.out.println("Saliendo del sistema...");
                 default -> System.out.println("Opción inválida.");
             }
-        } while (opcion != 4);
+
+        } while (opcion != 5);
     }
 
     // ================================
@@ -35,10 +44,12 @@ public class Main {
         System.out.println("\n===== MENÚ PRINCIPAL =====");
         System.out.println("1. Gestionar Medicamentos");
         System.out.println("2. Gestionar Clientes");
-        System.out.println("3. Atender Cola");
-        System.out.println("4. Salir");
+        System.out.println("3. Gestionar Grafo");
+        System.out.println("4. Atender Cola");
+        System.out.println("5. Salir");
         System.out.print("Seleccione una opción: ");
     }
+
 
     // ================================
     //  MENÚ MEDICAMENTOS
@@ -67,14 +78,37 @@ public class Main {
                 default -> System.out.println("Opción inválida.");
             }
         } while (opcion != 6);
+
     }
+
+    private static void menuGrafo() {
+        int opcion;
+        do {
+            System.out.println("\n===== MENÚ GRAFO =====");
+            System.out.println("1. Insertar ubicación (vértice)");
+            System.out.println("2. Insertar distancia (arista)");
+            System.out.println("3. Mostrar ubicaciones");
+            System.out.println("4. Volver");
+            System.out.print("Seleccione una opción: ");
+
+            opcion = leerEntero();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1 -> insertarVertice();
+                case 2 -> insertarArista();
+                case 3 -> grafo.mostrarGrafo();
+                case 4 -> {}
+                default -> System.out.println("Opción inválida.");
+            }
+        } while (opcion != 4);
+    }
+
 
     // ================================
     // MÉTODOS DE MEDICAMENTOS
     // ================================
     private static void insertarMedicamento() {
-        System.out.print("Código del producto: ");
-        int codigoProducto = leerEntero();
 
         sc.nextLine();
         System.out.print("Nombre: ");
@@ -110,7 +144,7 @@ public class Main {
 
         Medicamento m = new Medicamento(
                 nombre, categoria, fecha, cantidad, precio,
-                codigoProducto, instrucciones, efectos
+                 instrucciones, efectos
         );
 
         System.out.print("¿Desea agregar imágenes? (s/n): ");
@@ -189,11 +223,11 @@ public class Main {
                     med.agregarImagen(sc.nextLine());
                 }
                 case 2 -> {
-                    med.mostrarImagenes();
+                    med.getListaImagenes() ;
                     System.out.print("Ruta a eliminar: ");
                     med.eliminarImagen(sc.nextLine());
                 }
-                case 3 -> med.mostrarImagenes();
+                case 3 -> med.getListaImagenes();
                 case 0 -> {}
                 default -> System.out.println("Opción inválida.");
             }
@@ -247,6 +281,9 @@ public class Main {
 
         System.out.print("Dirección: ");
         String dir = sc.nextLine();
+
+        //Aqui se agrega la ubicacion del cliente al grafo
+        grafo.agregarVertice(dir);
 
         Cliente c = new Cliente(id, nombre, correo, tel, dir);
 
@@ -357,6 +394,7 @@ public class Main {
     }
 
     private static void atenderCola() {
+
         if (colaClientes.colaVacia()) {
             System.out.println("No hay clientes en espera.");
             return;
@@ -367,10 +405,36 @@ public class Main {
         System.out.println("\n=== ATENDIENDO CLIENTE ===");
         System.out.println("Cliente: " + c.getNombre());
         System.out.println("ID: " + c.getIdCliente());
+        System.out.println("Dirección: " + c.getDireccion());
 
-        System.out.println("\nCarrito:");
+        String ubicacion = c.getDireccion();
+
+        // 1. Validar que el vértice existe (se agrega automáticamente en enqueue)
+        if (!Grafo.existeVertice(ubicacion)) {
+            System.out.println("ERROR: La ubicación del cliente no existe en el grafo.");
+            return;
+        }
+
+        // 2. Verificar conectividad desde TIENDA
+        if (!Grafo.estaConectado(UBICACION_TIENDA, ubicacion)) {
+            System.out.println("ERROR: No hay un camino desde la Tienda hasta esta ubicación.");
+            return;
+        }
+
+        // 3. Ejecutar Dijkstra
+        Grafo.ResultadoDijkstra r = Grafo.dijkstra(UBICACION_TIENDA, ubicacion);
+
+        // 4. Mostrar factura
+        System.out.println("\n=== FACTURA ===");
         c.getCarrito().mostrarReporteCostos();
+
+        // 5. Mostrar ruta
+        System.out.println("\n=== RUTA DE ENTREGA (Dijkstra) ===");
+        System.out.println("Ruta: " + String.join(" -> ", r.ruta));
+        System.out.println("Distancia total: " + r.distancia);
     }
+
+
 
     // ================================
     // MÉTODOS EXTRA
@@ -390,4 +454,33 @@ public class Main {
         }
         return sc.nextDouble();
     }
+
+    // ================================
+    // MÉTODOS GRAFO
+    // ================================
+
+    private static void insertarVertice() {
+        System.out.print("Nombre de la ubicación: ");
+        String nombre = sc.nextLine();
+
+        grafo.agregarVertice(nombre);
+        System.out.println("Ubicación agregada.");
+    }
+
+    private static void insertarArista() {
+        System.out.print("Ubicación 1: ");
+        String a = sc.nextLine();
+
+        System.out.print("Ubicación 2: ");
+        String b = sc.nextLine();
+
+        System.out.print("Distancia entre ambas: ");
+        int d = leerEntero();
+        sc.nextLine();
+
+        grafo.agregarArista(a, b, d);
+        System.out.println("✔ Distancia agregada.");
+    }
+
+
 }

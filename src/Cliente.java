@@ -3,7 +3,7 @@ public class Cliente {
     private String nombre;
     private String correo;
     private String telefono;
-    private String direccion;
+    private String direccion; // este va a ser nuestro atributo "ubicación" para el grafo
     private ListaEnlazadaSimple carrito;
     private int prioridad; //Avance 2 atributo necesario para la cola de prioridad
 
