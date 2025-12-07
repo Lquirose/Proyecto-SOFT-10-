@@ -3,7 +3,7 @@ import java.util.LinkedList;
 public class ColaClientes {
 
     private final LinkedList<Cliente> colaPrioridadCliente;
-    private Grafo grafo;  // 🔥 Grafo para registrar ubicaciones
+    private Grafo grafo;  //Grafo para registrar ubicaciones
 
     public ColaClientes(Grafo grafo){
         this.colaPrioridadCliente = new LinkedList<>();
@@ -13,7 +13,7 @@ public class ColaClientes {
     // Insertar cliente en la cola y agregar su ubicación al grafo
     public void enqueue(Cliente nuevo){
 
-        // 🔥 Si la dirección del cliente no existe como vértice, agregarla automáticamente
+        //Si la dirección del cliente no existe como vértice, agregarla automáticamente
         if(!grafo.existeVertice(nuevo.getDireccion())){
             grafo.agregarVertice(nuevo.getDireccion());
         }
@@ -71,7 +71,7 @@ public class ColaClientes {
         }
         return false;
     }
-
+ main
     public void mostrarCola() {
         if (colaPrioridadCliente.isEmpty()) {
             System.out.println("La cola de clientes está vacía.");
