@@ -3,7 +3,6 @@ import java.util.List;
 
 public class arbolProductos {
 
-    // Nodo interno privado
     private class Nodo {
         Medicamento medicamento;
         Nodo izquierdo;
@@ -17,7 +16,7 @@ public class arbolProductos {
     private Nodo raiz;
 
     // ================================
-    // INSERTAR
+    // INSERTAR POR NOMBRE
     // ================================
     public void insertar(Medicamento m) {
         raiz = insertarRec(raiz, m);
@@ -30,7 +29,7 @@ public class arbolProductos {
 
         if (cmp < 0) actual.izquierdo = insertarRec(actual.izquierdo, m);
         else if (cmp > 0) actual.derecho = insertarRec(actual.derecho, m);
-        else System.out.println("⚠ Ya existe un medicamento con ese nombre.");
+        else System.out.println("Ya existe un medicamento con ese nombre.");
 
         return actual;
     }
@@ -53,40 +52,12 @@ public class arbolProductos {
     }
 
     // ================================
-    // BUSCAR POR CÓDIGO
-    // ================================
-    public Medicamento buscarPorCodigo(int codigo) {
-        return buscarCodigoRec(raiz, codigo);
-    }
-
-    private Medicamento buscarCodigoRec(Nodo actual, int codigo) {
-        if (actual == null) return null;
-
-        if (actual.medicamento.getCodigoProducto() == codigo)
-            return actual.medicamento;
-
-        Medicamento izq = buscarCodigoRec(actual.izquierdo, codigo);
-        if (izq != null) return izq;
-
-        return buscarCodigoRec(actual.derecho, codigo);
-    }
-
-    // ================================
-    // ELIMINAR POR CÓDIGO
-    // ================================
-    public void eliminarPorCodigo(int codigo) {
-        Medicamento m = buscarPorCodigo(codigo);
-        if (m != null) raiz = eliminarPorNombreRec(raiz, m.getNombre());
-    }
-
-    // ================================
-    // ELIMINAR POR NOMBRE (PÚBLICO)
+    // ELIMINAR POR NOMBRE
     // ================================
     public void eliminarPorNombre(String nombre) {
         raiz = eliminarPorNombreRec(raiz, nombre);
     }
 
-    // Método recursivo privado
     private Nodo eliminarPorNombreRec(Nodo actual, String nombre) {
         if (actual == null) return null;
 
@@ -99,17 +70,18 @@ public class arbolProductos {
             actual.derecho = eliminarPorNombreRec(actual.derecho, nombre);
         }
         else {
-            // Nodo encontrado
+            // Caso 1: sin hijos
             if (actual.izquierdo == null && actual.derecho == null)
                 return null;
 
+            // Caso 2: un hijo
             if (actual.izquierdo == null)
                 return actual.derecho;
 
             if (actual.derecho == null)
                 return actual.izquierdo;
 
-            // Dos hijos: usar sucesor
+            // Caso 3: dos hijos → sucesor
             Nodo sucesor = minimo(actual.derecho);
             actual.medicamento = sucesor.medicamento;
             actual.derecho = eliminarPorNombreRec(actual.derecho, sucesor.medicamento.getNombre());
@@ -124,7 +96,7 @@ public class arbolProductos {
     }
 
     // ================================
-    // LISTA ORDENADA (para JavaFX)
+    // LISTA ORDENADA
     // ================================
     public List<Medicamento> obtenerListaOrdenada() {
         List<Medicamento> lista = new ArrayList<>();
@@ -141,7 +113,7 @@ public class arbolProductos {
     }
 
     // ================================
-    // IMPRIMIR IN-ORDER (para consola)
+    // IMPRIMIR
     // ================================
     public void inOrder() {
         imprimirInOrder(raiz);
@@ -165,7 +137,9 @@ public class arbolProductos {
     private double calcularCostoRec(Nodo actual) {
         if (actual == null) return 0;
 
-        double costoActual = actual.medicamento.getPrecio() * actual.medicamento.getCantidad();
+        double costoActual = actual.medicamento.getPrecio()
+                * actual.medicamento.getCantidad();
+
         return costoActual
                 + calcularCostoRec(actual.izquierdo)
                 + calcularCostoRec(actual.derecho);
