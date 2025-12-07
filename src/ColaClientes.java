@@ -73,8 +73,7 @@ public class ColaClientes {
         }
         return false;
     }
-
-
+    
     //Imprimir
     public void mostrarCola() {
         if (colaPrioridadCliente.isEmpty()) {
