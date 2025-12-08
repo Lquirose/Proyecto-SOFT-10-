@@ -71,7 +71,6 @@ public class ColaClientes {
         }
         return false;
     }
- main
     public void mostrarCola() {
         if (colaPrioridadCliente.isEmpty()) {
             System.out.println("La cola de clientes está vacía.");

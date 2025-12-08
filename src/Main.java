@@ -170,7 +170,21 @@ public class Main {
 
         System.out.print("Nuevo nombre (" + med.getNombre() + "): ");
         String nuevo = sc.nextLine();
-        if (!nuevo.isEmpty()) med.setNombre(nuevo);
+        if (!nuevo.isEmpty()) {
+
+            // Validar nombre duplicado
+            if (inventario.buscar(nuevo) != null) {
+                System.out.println("Ya existe un medicamento con ese nombre.");
+                return;
+            }
+
+            // Reinsertar  en el árbol
+            String nombreViejo = med.getNombre();
+            inventario.eliminarPorNombre(nombreViejo);
+
+            med.setNombre(nuevo);
+            inventario.insertar(med);
+        }
 
         System.out.print("Nueva categoría (" + med.getCategoria() + "): ");
         String cat = sc.nextLine();
@@ -281,6 +295,10 @@ public class Main {
 
         System.out.print("Dirección: ");
         String dir = sc.nextLine();
+        if (dir.trim().isEmpty()) { //en caso de que no se escriba para que no se agrege un vértice vacío al grafo
+            System.out.println("La dirección no puede estar vacía.");
+            return;
+        }
 
         //Aqui se agrega la ubicacion del cliente al grafo
         grafo.agregarVertice(dir);
@@ -290,6 +308,10 @@ public class Main {
         System.out.print("Prioridad (1–3): ");
         c.setPrioridad(leerEntero());
         sc.nextLine();
+        if (c.getPrioridad() < 1 || c.getPrioridad() > 3) {
+            System.out.println("Prioridad inválida. Debe ser un valor entre 1 y 3.");
+            return;
+        }
 
         // Mostrar inventario
         System.out.println("\n=== LISTA DE MEDICAMENTOS ===");
@@ -310,6 +332,11 @@ public class Main {
                 int cantidad = leerEntero();
                 sc.nextLine();
 
+                if (cantidad <= 0) { //Valida en casos de 0 o numeros negativos
+                    System.out.println("Cantidad inválida. Debe ser mayor a cero.");
+                    continue;
+                }
+
                 if (cantidad > invMed.getCantidad()) {
                     System.out.println("No hay suficientes existencias. Solo quedan: " + invMed.getCantidad());
                     continue;
@@ -328,7 +355,7 @@ public class Main {
 
                 c.getCarrito().insertarFinal(medCarrito);
 
-                System.out.println("✔ Producto agregado.");
+                System.out.println("Producto agregado.");
             } else {
                 System.out.println("El producto no existe.");
             }
@@ -365,7 +392,11 @@ public class Main {
 
         System.out.print("Nueva dirección (" + cliente.getDireccion() + "): ");
         String dir = sc.nextLine();
-        if (!dir.isEmpty()) cliente.setDireccion(dir);
+        if (!dir.isEmpty()) {
+            cliente.setDireccion(dir);
+            grafo.agregarVertice(dir); //Agrega al grafo s se edita la direccion
+        }
+
 
         System.out.print("Nueva prioridad (" + cliente.getPrioridad() + "): ");
         String prio = sc.nextLine();
@@ -478,8 +509,13 @@ public class Main {
         int d = leerEntero();
         sc.nextLine();
 
+        if (d < 0) {
+            System.out.println("La distancia no puede ser negativa.");
+            return;
+        }
+
         grafo.agregarArista(a, b, d);
-        System.out.println("✔ Distancia agregada.");
+        System.out.println("Distancia agregada.");
     }
 
 
